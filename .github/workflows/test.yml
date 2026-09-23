@@ -1,0 +1,42 @@
+  name: test
+
+  on:
+    workflow_dispatch:
+    schedule:
+      - cron: "0 0 * * *"
+
+  permissions: 
+    contents: write
+
+  jobs:
+    test:
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: checkout
+          uses: actions/checkout@v4
+
+        - name: Setup Chromium
+          uses: browser-actions/setup-chrome@v1
+          id: setup-chrome
+          with:
+            chrome-version: stable
+
+        - name: get source-code
+          id: snapshot_step
+          uses: siddhartasr10/action-webpage-source@v1
+          with: #  All values are set to default explictly only for documentation purposes
+            custom-index: true
+            save-css: true
+            skip-on-throw: true
+            max-throws: 3
+          env:
+            PUPPETEER_EXECUTABLE_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
+
+        - name: GitHub Pages
+          uses: peaceiris/actions-gh-pages@v4
+          with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            publish_dir: ./sites
+            publish_branch: gh-pages
+            keep_files: true
