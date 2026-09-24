@@ -25,8 +25,8 @@
         - name: get source-code
           id: snapshot_step
           uses: siddhartasr10/action-webpage-source@v1
-          with: #  All values are set to default explictly only for documentation purposes
-            custom-index: true
+          with: 
+            default-index: true
             save-css: true
             skip-on-throw: true
             max-throws: 3
